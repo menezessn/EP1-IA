@@ -114,7 +114,7 @@ output_size = 26  # Número de letras do alfabeto
 
 # Criação e treinamento da MLP
 mlp = MLP(input_size, hidden_size, output_size)
-mlp.train(X_train, y_train, epochs=3000, learning_rate=0.1)
+mlp.train(X_train, y_train, epochs=1000, learning_rate=0.1)
 
 # Avaliação da MLP no conjunto de teste 
 predictions = np.argmax(mlp.forward(X_test), axis=1)
