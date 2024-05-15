@@ -40,7 +40,6 @@ Y_letters = read_Y(file_path)
 Y = np.array(array_letters(Y_letters))
 
 
-
 class MLP:
     def __init__(self, input_size, hidden_size, output_size):
         self.input_size = input_size # Tamanho de cada uma entrada (Pixels)
@@ -81,7 +80,7 @@ class MLP:
         
         # Atualização dos pesos e viéses
         self.weights_hidden_output += np.dot(self.hidden_output.T, delta_output) * learning_rate
-        self.weights_input_hidden += np.dot(x.reshape(-1, 1), delta_hidden) * learning_rate  # Correção aqui
+        self.weights_input_hidden += np.dot(x.reshape(-1, 1), delta_hidden) * learning_rate 
         self.bias_output += np.sum(delta_output, axis=0) * learning_rate
         self.bias_hidden += np.sum(delta_hidden, axis=0) * learning_rate
 
@@ -110,14 +109,14 @@ y_test = Y[-130:]
 
 # Parâmetros da MLP
 input_size = 120  # Número de pixels
-hidden_size = 64  # Número de neurônios na camada oculta (pode ser ajustado experimentalmente)
+hidden_size = 40  # Número de neurônios na camada oculta (pode ser ajustado experimentalmente)
 output_size = 26  # Número de letras do alfabeto
 
 # Criação e treinamento da MLP
 mlp = MLP(input_size, hidden_size, output_size)
-mlp.train(X_train, y_train, epochs=1000, learning_rate=0.1)
+mlp.train(X_train, y_train, epochs=3000, learning_rate=0.1)
 
-# Avaliação da MLP no conjunto de teste
+# Avaliação da MLP no conjunto de teste 
 predictions = np.argmax(mlp.forward(X_test), axis=1)
 y_test_labels = np.argmax(y_test, axis=1)
 accuracy = np.mean(predictions == y_test_labels)
