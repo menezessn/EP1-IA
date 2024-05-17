@@ -47,7 +47,7 @@ Y = np.array(array_letters(Y_letters))
 Y = np.reshape(Y, (1326, 26, 1))
 
 input_neurons = 120
-hidden_neurons = 60
+hidden_neurons = 80
 output_neurons = 26
 
 network = [
@@ -60,20 +60,24 @@ network = [
 # train
 
 
-X_train = X[:-130]
-y_train = Y[:-130]
+X_train = X[:500]
+y_train = Y[:500]
 X_test = X[-130:]
 y_test = Y[-130:]
-X_test = np.reshape(X_test, (130, 120, 1))
-y_test = np.reshape(y_test, (130, 26, 1))
+
+
 
 # Criação e treinamento da MLP
 
 
 train(network, mse, mse_prime, X_train, y_train, epochs=1000, learning_rate=0.1)
-
+predictions = []
 # Avaliação da MLP no conjunto de teste 
-predictions = np.argmax(predict(network, X_test), axis=1)
+for x, y in zip(X_test, y_test):
+            # forward
+            predictions.append(predict(network, x))
 y_test_labels = np.argmax(y_test, axis=1)
+predictions = np.argmax(predictions, axis=1)
 accuracy = np.mean(predictions == y_test_labels)
+print
 print("Acurácia no conjunto de teste:", accuracy)
