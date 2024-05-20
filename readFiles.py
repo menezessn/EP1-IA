@@ -1,7 +1,6 @@
 import numpy as np
-
-
 # Função para leitura dos dados de entrada, coloca em um array de arrays
+
 def read_x(file_path):
     arrays = []
     with open(file_path, 'r') as file:
@@ -28,15 +27,3 @@ def array_letters(letras):
         vetor[indice] = 1
         resultado.append(vetor)
     return resultado
-
-# Leitura dos dados
-file_path = 'Data/X.txt' 
-X = np.array(read_x(file_path))
-
-
-file_path = 'Data/Y_letra.txt' 
-Y_letters = read_Y(file_path)
-Y = np.array(array_letters(Y_letters))
-Y = np.reshape(Y, (1326, 26, 1))
-
-print(Y);
