@@ -1,34 +1,65 @@
-from mlp import *
-from readFiles import *
-import numpy as np
+import numpy as np  # type: ignore
+from aux import (
+                    train_test_split, accuracy, precision, recall, f1_score,
+                    confusion_matrix, plot_confusion_matrix,
+                    make_grid_search, plot_metrics)
+from MLP import MLP
+
+# Tamanho da entrada e saída da rede
+input_size = 120
+output_size = 26
+
+# X deve ser do shape (num_samples, input_size)
+# y deve ser do shape (num_samples, output_size), one-hot encoded
+X = np.load("X.npy").reshape(-1, input_size)
+Y = np.load("Y_classe.npy").reshape(-1, output_size)
+
+# divide o dataset
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
 
-# Leitura dos dados
-file_path = 'Data/X.txt' 
-X = np.array(read_x(file_path))
+# grid
+hidden_sizes = [20, 40, 60, 80, 100, 120, 150]
+activation_functions = ['relu', 'sigmoid', 'tanh']
+learning_rates = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5]
 
-file_path = 'Data/Y_letra.txt' 
-Y_letters = read_Y(file_path)
-Y = np.array(array_letters(Y_letters))
+# acha os melhores hiperparâmetros
+best_params, best_accuracy = make_grid_search(
+        X_train, y_train, input_size, output_size, hidden_sizes,
+        activation_functions, learning_rates, early_stopping=True
+    )
 
+# Treina o modelo final com os melhores hiperparâmetros
+mlp = MLP(
+    input_size, best_params['hidden_size'], output_size,
+    best_params['learning_rate'], best_params['activation_function']
+)
 
-# Divisão dos dados de treinamento e teste
-X_train = X[:-350]
-y_train = Y[:-350]
-X_test = X[-350:]
-y_test = Y[-350:]
+loss_history = mlp.train(
+    X_train, y_train, X_test, y_test,
+    epochs=1000, patience=10
+)
 
-# Parâmetros da MLP
-input_size = 120  # Número de pixels
-hidden_size = 30  # Número de neurônios na camada oculta (pode ser ajustado experimentalmente)
-output_size = 26  # Número de letras do alfabeto
-
-# Criação e treinamento da MLP
-mlp = MLP(input_size, hidden_size, output_size)
-mlp.train(X_train, y_train, epochs=1000, learning_rate=0.1)
-
-# Avaliação da MLP no conjunto de teste 
-predictions = np.argmax(mlp.forward(X_test), axis=1)
+# Evaluate the model on the test set
+y_pred = mlp.predict(X_test)
 y_test_labels = np.argmax(y_test, axis=1)
-accuracy = np.mean(predictions == y_test_labels)
-print("Acurácia no conjunto de teste:", accuracy)
+
+acc = accuracy(y_pred, y_test_labels)
+prec = precision(y_pred, y_test_labels, output_size)
+rec = recall(y_pred, y_test_labels, output_size)
+f1 = f1_score(prec, rec)
+
+print(f'Test Accuracy: {acc}')
+print(f'Test Precision: {prec}')
+print(f'Test Recall: {rec}')
+print(f'Test F1 Score: {f1}')
+
+# Confusion matrix
+cm = confusion_matrix(y_test_labels, y_pred, output_size)
+plot_confusion_matrix(
+    cm,
+    classes=[chr(i) for i in range(ord('A'), ord('Z') + 1)]
+)
+
+# Plot training loss
+plot_metrics([loss_history])
