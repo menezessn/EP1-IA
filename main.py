@@ -54,12 +54,12 @@ print(f'Test Precision: {prec}')
 print(f'Test Recall: {rec}')
 print(f'Test F1 Score: {f1}')
 
-# Confusion matrix
+# matriz de confusão 
 cm = confusion_matrix(y_test_labels, y_pred, output_size)
 plot_confusion_matrix(
     cm,
     classes=[chr(i) for i in range(ord('A'), ord('Z') + 1)]
 )
 
-# Plot training loss
+# plot loss
 plot_metrics([loss_history])
