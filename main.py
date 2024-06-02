@@ -26,7 +26,7 @@ learning_rates = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5]
 # acha os melhores hiperparâmetros
 best_params, best_accuracy = make_grid_search(
         X_train, y_train, input_size, output_size, hidden_sizes,
-        activation_functions, learning_rates, early_stopping=True
+        activation_functions, learning_rates, early_stopping=False
     )
 
 # Treina o modelo final com os melhores hiperparâmetros
@@ -40,7 +40,7 @@ loss_history = mlp.train(
     epochs=1000, patience=10
 )
 
-# Evaluate the model on the test set
+# avalia modelo no modelo de teste
 y_pred = mlp.predict(X_test)
 y_test_labels = np.argmax(y_test, axis=1)
 
