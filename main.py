@@ -6,8 +6,8 @@ from aux import (
 from MLP import MLP
 
 # Tamanho da entrada e saída da rede
-input_size = 120
-output_size = 26
+input_size = 120 # 10 x 12 = 120
+output_size = 26 # A - Z 
 
 # X deve ser do shape (num_samples, input_size)
 # y deve ser do shape (num_samples, output_size), one-hot encoded
@@ -19,9 +19,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
 
 # grid
-hidden_sizes = [20, 40, 60, 80, 100, 120, 150]
-activation_functions = ['relu', 'sigmoid', 'tanh']
-learning_rates = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5]
+hidden_sizes = [20, 40, 60, 80, 100, 120, 150] # Possíveis tamanhos de camada oculta
+activation_functions = ['relu', 'sigmoid', 'tanh'] # Funções de ativação possíveis na camada oculta
+learning_rates = [0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5] # learning rates possíveis da rede
 
 # acha os melhores hiperparâmetros
 best_params, best_accuracy = make_grid_search(
